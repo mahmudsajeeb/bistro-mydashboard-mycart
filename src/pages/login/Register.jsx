@@ -16,10 +16,31 @@ function Register() {
       // Signed in 
       const user = userCredential.user;
       console.log(user)
-      navigate("/")
-      // ...
+    
       updateProfile(data.name,data.photoURL)
       .then(()=>{
+        const saveUser = {name: data.name,email:data.email}
+        fetch('http://localhost:1000/users',{
+          method:"POST",
+          headers:{
+            'content-type':'application/json'
+          },
+          body:JSON.stringify(saveUser)
+        })
+        .then(res => res.json())
+        .then(data =>{
+            if(data.insertedId){
+              Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'User created successfully',
+                showConfirmButton: false,
+                timer: 1500
+              })
+              navigate("/")
+              // ...
+            }
+        })
           console.log('User Profile PhotoURL')
           reset()
       }).catch((err)=>{

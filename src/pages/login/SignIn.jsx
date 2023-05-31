@@ -1,18 +1,59 @@
 import React, { useContext } from 'react'
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom'
+import { Link,useLocation, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../provider/AuthProvider';
+import Swal from 'sweetalert2';
+import SocialLogin from './SocialLogin';
 function SignIn() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
-  const {createUser} = useContext(AuthContext)
+  const {createUser,updateUserProfile} = useContext(AuthContext)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || "/"
   const onSubmit = data => {
 
-    createUser(data.email, data.password)
-            .then(result => {
-                const loggedUser = result.user;
-                console.log(loggedUser);
-                 })   .catch(error => console.log(error))
-  };
+        console.log(data)
+//     createUser(data.email, data.password)
+//             .then(result => {
+//                 const loggedUser = result.user;
+//                 console.log(loggedUser);
+//                  })   .catch(error => console.log(error))
+
+            createUser(data.email,data.password)
+            .then(result =>{
+                const loggedUser = result.user
+                console.log(loggedUser)
+                updateUserProfile(data.name,data.photoUrl)
+                
+                .then(()=>{
+                    const saveUser = {name:data.name, email:data.email}
+                    fetch('http://localhost:1000/users',{
+                        method:"POST",
+                        headers:{
+                            'content-type':'application/json'
+                        },
+                        body:JSON.stringify(saveUser)
+                    })
+                    .then(res => res.json())
+                    .then(data =>{
+                        if(data.insertedId){
+                            reset()
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Your Succesfully create account',
+                                showConfirmButton: false,
+                                timer: 1500
+                              })
+                              navigate(from,{replace:true})
+                        }
+                    })
+                    console.log("User Profile info Update")
+                 
+                }).catch(error => console.log(error))
+            })
+   };
+
   return (
     <div>
     <div className="hero min-h-screen bg-base-200">
@@ -32,18 +73,12 @@ function SignIn() {
                             </div>
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text">Name</span>
+                                    <span className="label-text">Photo Url</span>
                                 </label>
-                                <input type="text"  {...register("name", { required: true })} name="name" placeholder="Name" className="input input-bordered" />
-                                {errors.name && <span className="text-red-600">Name is required</span>}
+                                <input type="text"  {...register("photoUrl", { required: true })}  placeholder="Photo Url" className="input input-bordered" />
+                                {errors.photoUrl && <span className="text-red-600">Name is required</span>}
                             </div>
-                            {/* <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Photo URL</span>
-                                </label>
-                                <input type="text"  {...register("photoURL", { required: true })} placeholder="Photo URL" className="input input-bordered" />
-                                {errors.photoURL && <span className="text-red-600">Photo URL is required</span>}
-                            </div> */}
+                            
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Email</span>
@@ -73,6 +108,8 @@ function SignIn() {
                             </div>
                         </form>
                         <p><small>Already have an account <Link to="/login">Login</Link></small></p>
+                        
+                        <SocialLogin />
                     </div>
                 </div>
             </div>

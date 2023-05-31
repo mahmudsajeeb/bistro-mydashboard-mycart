@@ -6,7 +6,7 @@ import Footer from '../shared/Footer'
 
 export default function Main() {
   const location = useLocation()
-  const noHeaderFooter = location.pathname.includes('login') || location.pathname.includes('register')
+  const noHeaderFooter = location.pathname.includes('login') || location.pathname.includes('signin')
   return (
     <div>
       {noHeaderFooter || <Header />}

@@ -4,6 +4,7 @@ import bgimg from '../../assets/others/authentication.png'
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
 import { AuthContext } from '../../provider/AuthProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import SocialLogin from './SocialLogin';
 
 function Login() {
   // const captchaRef = useRef(null)
@@ -50,6 +51,8 @@ function Login() {
 
    
   }
+
+
   return (
     <div style={{
       backgroundImage: `url(${bgimg})`,
@@ -87,13 +90,14 @@ function Login() {
           
         </div>
         <div className="form-control mt-6">
-          <input disabled={disabled}  type='submit' className="btn btn-primary" value=
+          <input disabled={false}  type='submit' className="btn btn-primary" value=
           'login' /> 
            
         </div>
       </form>
       {/* <p className=' text-center font-semibold text-[#D1A054]'>New here? <Link to={'/signin'}> Create a New Account</Link></p> */}
-      <p className=' text-center font-semibold text-[#D1A054]'>New here? <Link to={'/register'}> Create a New Account</Link></p>
+      <p className=' text-center font-semibold text-[#D1A054]'>New here? <Link to={'/signin'}> Create a New Account</Link></p>
+      <SocialLogin />
   
     </div>
   </div>

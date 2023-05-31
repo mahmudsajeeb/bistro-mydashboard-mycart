@@ -54,7 +54,7 @@ function Header() {
       </div>
     </button> */}
     {
-      user ? <> <img src={user?.photoURL} alt="" /> <span>{user.displayName}</span> <button onClick={signOut} className='btn btn-outline text-white '> <Link to='login'>LogOut</Link></button> </>   :    <button className='btn'><Link to='login'>Login</Link></button> 
+      user ? <> <img width={100} height={100} src={user?.photoURL} alt="" /> <span>{user.displayName}</span> <button onClick={signOut} className='btn btn-outline text-white '> <Link to='login'>LogOut</Link></button> </>   :    <button className='btn'><Link to='login'>Login</Link></button> 
     }
   </div>
 </div>
